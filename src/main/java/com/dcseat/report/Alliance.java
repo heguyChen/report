@@ -2,7 +2,7 @@ package com.dcseat.report;
 
 /**
  * 联盟报表接口
- *123
+ *1234
  */
 public interface Alliance {
 
