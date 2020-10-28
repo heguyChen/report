@@ -8,7 +8,7 @@ public class AllianceTemplete implements Alliance {
 
     @Override
     public void printExcel() {
-
+        System.out.println();
     }
 
 }
