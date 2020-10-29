@@ -10,7 +10,7 @@
         </commentGenerator>
         <!--连接数据库 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://远程地址:3306/数据库名" userId="数据库用户名"
+                        connectionURL="jdbc:mysql://dcseat.com:3306/seat" userId="seat"
                         password="密码"/>
         <!-- 实体类的地址 targetProject + targetPackage == 生成文件所在位置  根据表结构生成的实体类就在项目的com.common.model中-->
         <javaModelGenerator targetPackage="com.common.model"
