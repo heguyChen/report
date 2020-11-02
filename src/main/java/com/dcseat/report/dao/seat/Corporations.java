@@ -1,15 +1,17 @@
 package com.dcseat.report.dao.seat;
 
+/**
+ * 公司相关的sql语句映射实体类
+ */
 public interface Corporations {
 
     /**
-     * 获取公司的月度赏金税收
+     * 获取公司的月度赏金税收(该日期当月)
      * @param corpId    公司id
-     * @param year      年
-     * @param month     月
-     * @return 返回指定月份下公司的赏金税收
+     * @param date      日期,格式为yyyy-MM-dd
+     * @return 返回指定日期下公司的赏金税收
      */
-    Float getCorpBounty(Integer corpId, Integer year, Integer month);
+    Float getCorpBounty(Integer corpId, String date);
 
     /**
      * 获取公司每个账户的收支求和

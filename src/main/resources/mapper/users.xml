@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.dcseat.report.dao.seat.Users">
+    <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
+    <select id="getActiveUsersByCorp"  resultType="java.lang.Integer">
+        SELECT
+            COUNT(u.`name`)
+        FROM
+            users u
+            JOIN character_onlines co ON u.main_character_id = co.character_id
+            JOIN corporation_members cm ON co.character_id = cm.character_id
+        WHERE
+            cm.corporation_id = #{corpId}
+            AND co.last_login > STR_TO_DATE(#{date}, '%Y-%m-%d')
+    </select>
+
+</mapper>

@@ -1,5 +1,8 @@
 package com.dcseat.report.dao.seat;
 
+/**
+ * 成员相关的sql语句映射实体类
+ */
 public interface Characters {
 
     /**

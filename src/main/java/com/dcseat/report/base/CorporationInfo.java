@@ -1,0 +1,42 @@
+package com.dcseat.report.base;
+
+import java.io.Serializable;
+
+/**
+ * 公司信息实体类
+ */
+public class CorporationInfo implements Serializable {
+    // 公司id
+    private Integer id;
+
+    // 公司名称
+    private String name;
+
+    // 公司税率
+    private Float taxRate;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Float getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(Float taxRate) {
+        this.taxRate = taxRate;
+    }
+
+}
