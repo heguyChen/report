@@ -3,7 +3,7 @@
 <!--命名空间应该是对应接口的包名+接口名 -->
 <mapper namespace="com.dcseat.report.dao.seat.Users">
     <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
-    <select id="getActiveUsersByCorp"  resultType="java.lang.Integer">
+    <select id="getActiveUsersNumberByCorp"  resultType="java.lang.Integer">
         SELECT
             COUNT(u.`name`)
         FROM

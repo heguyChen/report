@@ -19,7 +19,7 @@ public class PoiTest {
 
     public static void main(String[] args)  {
 
-        Alliance templete = new AllianceTemplate();
+        Alliance templete = new AllianceTemplate("");
         templete.clear();
 
 
