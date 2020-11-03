@@ -1,8 +1,11 @@
 package com.dcseat.report.dao.seat;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * pap相关的sql语句映射实体类
  */
+@Repository
 public interface Paps {
 
     /**
@@ -12,7 +15,7 @@ public interface Paps {
      * @param month     月份
      * @return 该军团当月pap总量
      */
-    Float getPapsByCorp(Integer corpId, Integer year, Integer month);
+    Float getPapsByCorp(Integer corpId, String year, String month);
 
     /**
      * 获取成员级别的pap数据(该日期当月)

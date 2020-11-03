@@ -17,6 +17,12 @@ public class CorporationInfo {
     // 公司税率
     private Float taxRate;
 
+    // 活跃数
+    private Integer activePilotNumber;
+
+    // 活跃数得分
+    private Float activePilotNumberScore;
+
 //    public Integer getId() {
 //        return id;
 //    }

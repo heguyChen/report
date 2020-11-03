@@ -1,37 +1,54 @@
 package com.dcseat.report.module.alliance;
 
 import com.dcseat.report.Alliance;
+import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Users;
-import com.dcseat.report.util.PropertiesUtil;
+import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.lang.reflect.Field;
+import java.io.UnsupportedEncodingException;
+
 
 /**
  * 统计活跃成员数和得分情况
  */
-public class ActivePilot implements Alliance {
+public class ActivePilot extends AllianceTemplate implements Alliance {
 
-    @Autowired
-    private Users users;
+    private static final int MIN_CORP_NUMBER = 10;
+
+    private static final float MAX_SCORE = 5;
+
+    private Users users = SpringContextUtil.getBean("users");
 
     private String ActivePilot_title = "活跃人头达标（5分）";
-    // 活跃数
-    private Integer activePilotNumber;
 
     private String activePilotNumber_title = "活跃人头";
-    // 得分
-    private Float score;
 
     private String score_title = "分数";
 
+    // 列数
+    protected Integer col = 2;
+
+    /**
+     * 构造方法 指定联盟名称
+     *
+     * @param allianceName
+     */
+    public ActivePilot(String allianceName) {
+        super(allianceName);
+    }
 
     @Override
-    public void printExcelTitle(Sheet sheet, int row, int col) {
-
+    public int printExcelTitle(Sheet sheet, int row, int col) throws UnsupportedEncodingException {
+        sheet.autoSizeColumn(col);
+        Cell titleCell = sheet.getRow(row).createCell(col);
+        titleCell.setCellValue(ActivePilot_title);
+        sheet.setColumnWidth(col, titleCell.getStringCellValue().getBytes("GBK").length * 256);
+        return col;
     }
 
     @Override
@@ -46,8 +63,18 @@ public class ActivePilot implements Alliance {
 
     @Override
     public void initData() {
+        for (CorporationInfo corp : corps) {
+            Integer number = users.getActiveUsersNumberByCorp(corp.getId(), StringUtils.getSqlDate());
+            corp.setActivePilotNumber(number);
+            //=IF(D13>10,5,5/10*D13)
+            if (number > MIN_CORP_NUMBER) {
+                corp.setActivePilotNumberScore(MAX_SCORE);
+            } else {
+//                MAX_SCORE / MIN_CORP_NUMBER * number;
+//                corp.setActivePilotNumberScore();
+            }
+        }
 
 
-        users.getActiveUsersNumberByCorp(123, StringUtils.getSqlDate());
     }
 }

@@ -3,6 +3,8 @@ package com.dcseat.report;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * 联盟报表接口
  * 组合报表的各项组件指标
@@ -18,7 +20,7 @@ public interface Alliance {
      * @param row       本模块输入的起点行
      * @param col       本模块输入的起点列
      */
-    void printExcelTitle(Sheet sheet, int row, int col);
+    int printExcelTitle(Sheet sheet, int row, int col) throws UnsupportedEncodingException;
 
     /**
      * 输出组件数据到excel文件

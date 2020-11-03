@@ -29,8 +29,8 @@ class UsersTest  {
         String day = PropertiesUtil.getProperty("dc.day");
         String date = new StringBuilder(year).append("-").append(month).append("-").append(day).toString();
 //        Users users = SpringContextUtil.getBean("users");
-        Integer num = users.getActiveUsersByCorp(98547771, date);
-        System.out.println(num);
+//        Integer num = users.getActiveUsersByCorp(98547771, date);
+//        System.out.println(num);
     }
 
 }
