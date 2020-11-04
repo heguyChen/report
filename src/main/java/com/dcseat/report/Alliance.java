@@ -19,16 +19,18 @@ public interface Alliance {
      * @param sheet     文件的sheet页
      * @param row       本模块输入的起点行
      * @param col       本模块输入的起点列
+     * @return          返回方法结束时的列
      */
-    int printExcelTitle(Sheet sheet, int row, int col) throws UnsupportedEncodingException;
+    int printExcelTitle(Sheet sheet, int row, int col);
 
     /**
      * 输出组件数据到excel文件
      * @param sheet     文件的sheet页
      * @param row       本模块输入的起点行
      * @param col       本模块输入的起点列
+     * @return          返回方法结束时的列
      */
-    void printExcelValue(Sheet sheet, int row, int col);
+    int printExcelValue(Sheet sheet, int row, int col);
 
     /*
     清空组件自身数据

@@ -6,9 +6,11 @@ import com.dcseat.report.dao.seat.Alliances;
 import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +39,17 @@ public class AllianceTemplate implements Alliance {
     // 公司信息
     protected List<CorporationInfo> corps = new ArrayList<>();
 
-    private AllianceTemplate() {};
+//    private AllianceTemplate() {};
     /**
      * 构造方法 指定联盟名称
      * @param allianceName
      */
     public AllianceTemplate(String allianceName) {
         this.allianceName = allianceName;
+    }
+
+    public AllianceTemplate() {
+
     }
 
     public void add(Alliance a) {
@@ -55,29 +61,44 @@ public class AllianceTemplate implements Alliance {
     }
 
     @Override
-    public int printExcelTitle(Sheet sheet, int row, int col) throws UnsupportedEncodingException {
+    public int printExcelTitle(Sheet sheet, int row, int col) {
+        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
+        cellStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
         // 完成大标题输入 在循环结束后 把大标题合并居中
         Row row0 = sheet.createRow(row++);
+        row0.setRowStyle(cellStyle);
         Cell topTitle = row0.createCell(col);
         topTitle.setCellValue(allianceName+" "+ StringUtils.getTitleDate()+" 月报");
         // 输入公司列
         Row titleRow = sheet.createRow(row);
+        titleRow.setRowStyle(cellStyle);
         Cell allianceTemplateCell = titleRow.createCell(col);
         allianceTemplateCell.setCellValue(corpTitle);
         CellRangeAddress region=new CellRangeAddress(row, row+1, col, col);
         sheet.addMergedRegion(region);
+        sheet.createRow(row+1).setRowStyle(cellStyle);
         for (Alliance m : module) {
             col = m.printExcelTitle(sheet, row, ++col);
         }
 
-        return 0;
+        return col;
 
     }
 
     @Override
-    public void printExcelValue(Sheet sheet, int row, int col) {
+    public int printExcelValue(Sheet sheet, int row, int col) {
         row+=3;// topTitle、title1、title2
+        for (int i = 0; i < corps.size(); i++) {
+            CorporationInfo corp = corps.get(i);
+            Row row_ = sheet.createRow(i + row);
+            Cell corpCell = row_.createCell(col);
+            corpCell.setCellValue(corp.getName());
+        }
 
+        for (Alliance m : module) {
+            col = m.printExcelValue(sheet, row, ++col);
+        }
+        return 0;
     }
 
     @Override

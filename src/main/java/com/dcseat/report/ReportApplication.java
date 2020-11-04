@@ -37,10 +37,11 @@ public class ReportApplication implements CommandLineRunner {
         // 接入自定义的main接口
         String name = PropertiesUtil.getProperty("dc.name");
         AllianceTemplate allianceTemplate = new AllianceTemplate(name);
-        allianceTemplate.add(new ActivePilot(name));
-        // ...继续添加模块
         allianceTemplate.initData();
 
+        allianceTemplate.add(new ActivePilot(allianceTemplate));
+        // ...继续添加模块
+        
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(name);
         allianceTemplate.printExcelTitle(sheet, 0, 0);

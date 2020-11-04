@@ -23,6 +23,9 @@ public class CorporationInfo {
     // 活跃数得分
     private Float activePilotNumberScore;
 
+    // PAP总数
+    private Float papCount;
+
 //    public Integer getId() {
 //        return id;
 //    }
