@@ -26,6 +26,18 @@ public class CorporationInfo {
     // PAP总数
     private Float papCount;
 
+    // 人均PAP
+    private Float perPilotPap;
+
+    // PAP分数
+    private Float perPilotPapScore;
+
+    // 人均PAP奖励分数
+    private Float perPilotPapRewardScore;
+
+    // 总量PAP奖励分数
+    private Float papCountRewardScore;
+
 //    public Integer getId() {
 //        return id;
 //    }

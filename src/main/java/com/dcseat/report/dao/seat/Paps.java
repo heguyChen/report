@@ -25,5 +25,14 @@ public interface Paps {
      */
     Float getPapsByChar(Integer charId, String date);
 
+    /**
+     *
+     * @param allianceName  联盟名称
+     * @param year          年份
+     * @param month         月份
+     * @param rank          排名
+     * @return  返回排名第几的pap数量
+     */
+    Float getCorpPapsByRank(String allianceName, String year, String month, Integer rank);
 
 }

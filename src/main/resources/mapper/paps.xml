@@ -5,7 +5,7 @@
     <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
     <select id="getPapsByCorp"  resultType="java.lang.Float">
         SELECT
-            SUM( pap.`value` )
+            IFNULL(SUM( pap.`value` ),0)
         FROM
             kassie_calendar_paps pap
             JOIN corporation_members cm ON pap.character_id = cm.character_id
@@ -15,4 +15,23 @@
             AND pap.`month` = #{month};
     </select>
 
+    <select id="getCorpPapsByRank" resultType="java.lang.Float">
+        SELECT
+            IFNULL(SUM( pap.`value` ),0) paps
+        FROM
+            kassie_calendar_paps pap
+            JOIN corporation_members cm ON pap.character_id = cm.character_id
+            JOIN alliance_members am ON cm.corporation_id = am.corporation_id
+            JOIN alliances a
+        WHERE
+            a.`name` = #{allianceName}
+            AND pap.YEAR = #{year}
+            AND pap.`month` = #{month}
+        GROUP BY
+            cm.corporation_id
+        ORDER BY
+            paps DESC
+            LIMIT #{rank}, 1
+
+    </select>
 </mapper>

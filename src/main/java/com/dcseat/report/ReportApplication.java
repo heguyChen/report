@@ -1,17 +1,15 @@
 package com.dcseat.report;
 
-import com.dcseat.report.dao.seat.Users;
-import com.dcseat.report.module.alliance.ActivePilot;
+import com.dcseat.report.module.alliance.ActivePilotModule;
 import com.dcseat.report.module.alliance.AllianceTemplate;
+import com.dcseat.report.module.alliance.PapStatisticsModule;
 import com.dcseat.report.util.PropertiesUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -39,7 +37,8 @@ public class ReportApplication implements CommandLineRunner {
         AllianceTemplate allianceTemplate = new AllianceTemplate(name);
         allianceTemplate.initData();
 
-        allianceTemplate.add(new ActivePilot(allianceTemplate));
+        allianceTemplate.add(new ActivePilotModule(allianceTemplate));
+        allianceTemplate.add(new PapStatisticsModule(allianceTemplate));
         // ...继续添加模块
         
         XSSFWorkbook workbook = new XSSFWorkbook();

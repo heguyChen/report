@@ -16,13 +16,13 @@ import java.io.UnsupportedEncodingException;
 /**
  * 统计活跃成员数和得分情况
  */
-public class ActivePilot extends AllianceTemplate implements Alliance {
+public class ActivePilotModule extends AllianceTemplate implements Alliance {
 
     private static final int MIN_CORP_NUMBER = 10;
 
     private static final float MAX_SCORE = 5;
 
-    private static Logger log = LoggerFactory.getLogger(ActivePilot.class);
+    private static Logger log = LoggerFactory.getLogger(ActivePilotModule.class);
 
     private Users users = SpringContextUtil.getBean("users");
 
@@ -40,7 +40,7 @@ public class ActivePilot extends AllianceTemplate implements Alliance {
      *
      * @param alliance 父类对象
      */
-    public ActivePilot(AllianceTemplate alliance) {
+    public ActivePilotModule(AllianceTemplate alliance) {
         super();
         this.corps = alliance.corps;
         this.initData();
