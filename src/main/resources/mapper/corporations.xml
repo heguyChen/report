@@ -5,12 +5,14 @@
     <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
     <select id="getCorpBounty" resultType="java.lang.Float">
         SELECT
-            sum(IFNULL( cwj.tax, 0 ))
+            IFNULL(sum(IFNULL( cwj.tax, 0 )), 0)
         FROM
             corporation_wallet_journals cwj
         WHERE
-            cwj.ref_type = 'bounty_prizes'
-            AND date( cwj.date ) > STR_TO_DATE(#{date}, '%Y-%m-%d')
+            cwj.corporation_id = #{corpId}
+            AND cwj.ref_type = 'bounty_prizes'
+            AND date( cwj.date ) >= STR_TO_DATE('2020-10-1', '%Y-%m-%d')
+        AND date(cwj.date) &lt; date_add(STR_TO_DATE('2020-10-1', '%Y-%m-%d'), interval 1 month)
 
     </select>
 

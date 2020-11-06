@@ -9,6 +9,7 @@ import com.dcseat.report.util.SpringContextUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,8 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
      */
     private static final Float MAX_COUNT_PAP_SCORE = 7.5F;
 
+    private static final Integer COL = 5;
+
     private Paps paps = SpringContextUtil.getBean("paps");
 
     private String papStatistics_title = "PAP达标(55分)";
@@ -62,20 +65,41 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
 
     @Override
     public int printExcelTitle(Sheet sheet, int row, int col) {
-        return super.printExcelTitle(sheet, row, col);
+        // 列缓存
+        int temp_col = col;
+        // 交叉设置一级、二级标题
+        // 设置pap基本统计
+        setCellStyle(sheet.getRow(row).createCell(col)).setCellValue(papStatistics_title);
+        CellRangeAddress region=new CellRangeAddress(row, row, col, col+=2);
+        sheet.addMergedRegion(region);
+        // 设置pap额外统计
+        setCellStyle(sheet.getRow(row).createCell(++col)).setCellValue(perPilotPapReward_title);
+        setCellStyle(sheet.getRow(row).createCell(++col)).setCellValue(papCountReward_title);
+        col = temp_col;
+        row++;
+        // 设置二级标题+样式
+        setCellStyle(sheet.getRow(row).createCell(col++)).setCellValue(papCount_title);
+        setCellStyle(sheet.getRow(row).createCell(col++)).setCellValue(perPilotPap_title);
+        setCellStyle(sheet.getRow(row).createCell(col++)).setCellValue(score_title);
+        setCellStyle(sheet.getRow(row).createCell(col++)).setCellValue(score_title);
+        setCellStyle(sheet.getRow(row).createCell(col++)).setCellValue(score_title);
+        return col;
     }
 
     @Override
     public int printExcelValue(Sheet sheet, int row, int col) {
+        int temp_col = col;
         for (CorporationInfo corp : corps) {
+            col = temp_col;
             Row row_ = sheet.getRow(row++);
-            Cell numberCell = row_.createCell(col);
-            Cell scoreCell = row_.createCell(col + 1);
-            numberCell.setCellValue(corp.getPapCount());
-            scoreCell.setCellValue(corp.getPerPilotPap());
+            row_.createCell(col++).setCellValue(corp.getPapCount());
+            row_.createCell(col++).setCellValue(corp.getPerPilotPap());
+            row_.createCell(col++).setCellValue(corp.getPerPilotPapScore());
+            row_.createCell(col++).setCellValue(corp.getPerPilotPapRewardScore());
+            row_.createCell(col++).setCellValue(corp.getPapCountRewardScore());
         }
 
-        return 1;
+        return col;
     }
 
     @Override
@@ -94,9 +118,39 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
             Float papCount = paps.getPapsByCorp(corp.getId(),
                     PropertiesUtil.getProperty("dc.year"),
                     PropertiesUtil.getProperty("dc.month"));
-            corp.setPapCount(papCount);
+           /*
+            临时代码 合并老数据
+             */
+            switch (corp.getName()) {
+                case "Vision CN":
+                    corp.setPapCount(papCount+615);
+                    break;
+                case "B.O.P Supplication For Glorious":
+                    corp.setPapCount(papCount+410);
+                    break;
+                case "Faceless.":
+                    corp.setPapCount(papCount+482);
+                    break;
+                case "Perseus War Alliance":
+                    corp.setPapCount(papCount+116);
+                    break;
+                case "Lang Jiang Hu Elite":
+                    corp.setPapCount(papCount+61);
+                    break;
+                case "Shadow of Dragon":
+                    corp.setPapCount(papCount+77);
+                    break;
+                case "To Another Galaxy":
+                    corp.setPapCount(papCount+7);
+                    break;
+                case "Vision Partners":
+                    corp.setPapCount(papCount+2);
+                    break;
+                default:
+                    corp.setPapCount(papCount);
+            }
             // 计算人均pap
-            Float perPilotPap = MathUtils.division(String.valueOf(papCount), String.valueOf(corp.getActivePilotNumber()));
+            Float perPilotPap = MathUtils.division(String.valueOf(corp.getPapCount()), String.valueOf(corp.getActivePilotNumber()));
             corp.setPerPilotPap(perPilotPap);
             // 计算分数 =IF(G14>3,55,45*G14/3)
             if (perPilotPap > MIN_PER_PAP) {

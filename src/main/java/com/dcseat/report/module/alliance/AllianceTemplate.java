@@ -62,25 +62,22 @@ public class AllianceTemplate implements Alliance {
 
     @Override
     public int printExcelTitle(Sheet sheet, int row, int col) {
-        CellStyle cellStyle = sheet.getWorkbook().createCellStyle();
-        cellStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER);
         // 完成大标题输入 在循环结束后 把大标题合并居中
         Row row0 = sheet.createRow(row++);
-        row0.setRowStyle(cellStyle);
         Cell topTitle = row0.createCell(col);
         topTitle.setCellValue(allianceName+" "+ StringUtils.getTitleDate()+" 月报");
-        // 输入公司列
-        Row titleRow = sheet.createRow(row);
-        titleRow.setRowStyle(cellStyle);
-        Cell allianceTemplateCell = titleRow.createCell(col);
-        allianceTemplateCell.setCellValue(corpTitle);
-        CellRangeAddress region=new CellRangeAddress(row, row+1, col, col);
+        // 设置一级标题+合并
+        sheet.createRow(row).createCell(col).setCellValue(corpTitle);
+        CellRangeAddress region=new CellRangeAddress(row, row+1, col, col++);
         sheet.addMergedRegion(region);
-        sheet.createRow(row+1).setRowStyle(cellStyle);
-        for (Alliance m : module) {
-            col = m.printExcelTitle(sheet, row, ++col);
-        }
 
+        sheet.createRow(row+1);
+        for (Alliance m : module) {
+            col = m.printExcelTitle(sheet, row, col);
+        }
+        setCellStyle(sheet.getRow(row).createCell(col)).setCellValue("总分");
+        CellRangeAddress region2 = new CellRangeAddress(row, row+1, col, col++);
+        sheet.addMergedRegion(region2);
         return col;
 
     }
@@ -94,9 +91,13 @@ public class AllianceTemplate implements Alliance {
             Cell corpCell = row_.createCell(col);
             corpCell.setCellValue(corp.getName());
         }
-
+        col++;
         for (Alliance m : module) {
-            col = m.printExcelValue(sheet, row, ++col);
+            col = m.printExcelValue(sheet, row, col);
+        }
+        for (CorporationInfo corp :corps) {
+            Row row_ = sheet.getRow(row++);
+            row_.createCell(col).setCellValue(corp.getScore());
         }
         return 0;
     }
@@ -111,9 +112,32 @@ public class AllianceTemplate implements Alliance {
         // 处理 corps成员变量
         try {
             corps = this.alliances.getCorpInfosByAllianceName(allianceName);
+//            for (CorporationInfo corp : corps) {
+//                if (corp.getTaxRate() == 1) {
+//                    corps.remove(corp);
+//                }
+//            }
         } catch (Exception e) {
             log.error("获取联盟公司信息失败,异常信息:{}", e.getMessage());
         }
     }
 
+    /**
+     *
+     * @param cell
+     * @return
+     */
+    protected Cell setCellStyle(Cell cell) {
+        CellStyle cellStyle = cell.getSheet().getWorkbook().createCellStyle();
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        cell.setCellStyle(cellStyle);
+        return cell;
+    }
+
+    public void addData() {
+        for (CorporationInfo corp : corps) {
+            corp.getName();
+        }
+    }
 }

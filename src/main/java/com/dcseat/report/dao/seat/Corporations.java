@@ -1,8 +1,11 @@
 package com.dcseat.report.dao.seat;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * 公司相关的sql语句映射实体类
  */
+@Repository
 public interface Corporations {
 
     /**

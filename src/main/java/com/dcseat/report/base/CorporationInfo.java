@@ -18,25 +18,48 @@ public class CorporationInfo {
     private Float taxRate;
 
     // 活跃数
-    private Integer activePilotNumber;
+    private int activePilotNumber;
 
     // 活跃数得分
-    private Float activePilotNumberScore;
+    private float activePilotNumberScore;
 
     // PAP总数
-    private Float papCount;
+    private float papCount;
 
     // 人均PAP
-    private Float perPilotPap;
+    private float perPilotPap;
 
     // PAP分数
-    private Float perPilotPapScore;
+    private float perPilotPapScore;
 
     // 人均PAP奖励分数
-    private Float perPilotPapRewardScore;
+    private float perPilotPapRewardScore;
 
     // 总量PAP奖励分数
-    private Float papCountRewardScore;
+    private float papCountRewardScore;
+
+    // 军团税收
+    private float corpTax;
+
+    // 联盟税
+    private float allianceTax;
+
+    // 军团税收排名
+    private int taxRank;
+
+    // 军团税收得分
+    private float taxScore;
+
+    // 最后得分
+    private float score;
+
+    public void sumScore() {
+        score = activePilotNumberScore +
+                perPilotPapScore +
+                perPilotPapRewardScore +
+                papCountRewardScore +
+                taxScore;
+    }
 
 //    public Integer getId() {
 //        return id;

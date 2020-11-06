@@ -3,6 +3,7 @@ package com.dcseat.report;
 import com.dcseat.report.module.alliance.ActivePilotModule;
 import com.dcseat.report.module.alliance.AllianceTemplate;
 import com.dcseat.report.module.alliance.PapStatisticsModule;
+import com.dcseat.report.module.alliance.TaxModule;
 import com.dcseat.report.util.PropertiesUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -39,8 +40,9 @@ public class ReportApplication implements CommandLineRunner {
 
         allianceTemplate.add(new ActivePilotModule(allianceTemplate));
         allianceTemplate.add(new PapStatisticsModule(allianceTemplate));
+        allianceTemplate.add(new TaxModule(allianceTemplate));
         // ...继续添加模块
-        
+
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(name);
         allianceTemplate.printExcelTitle(sheet, 0, 0);
@@ -60,4 +62,5 @@ public class ReportApplication implements CommandLineRunner {
             e.printStackTrace();
         }
     }
+
 }
