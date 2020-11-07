@@ -1,6 +1,9 @@
 package com.dcseat.report.dao.seat;
 
+import com.dcseat.report.base.CorporationInfo;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * pap相关的sql语句映射实体类
@@ -10,12 +13,12 @@ public interface Paps {
 
     /**
      * 获取公司级别的pap数据(该日期当月)
-     * @param corpId    公司id
+     * @param list    公司id
      * @param year      年份
      * @param month     月份
      * @return 该军团当月pap总量
      */
-    Float getPapsByCorp(Integer corpId, String year, String month);
+    List getPapsByCorp(List<CorporationInfo> list, String year, String month);
 
     /**
      * 获取成员级别的pap数据(该日期当月)

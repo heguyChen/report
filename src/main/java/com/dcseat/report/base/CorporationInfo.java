@@ -2,6 +2,9 @@ package com.dcseat.report.base;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Objects;
+
 /**
  * 公司信息实体类
  */
@@ -61,7 +64,20 @@ public class CorporationInfo {
                 taxScore;
     }
 
-//    public Integer getId() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CorporationInfo that = (CorporationInfo) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    //    public Integer getId() {
 //        return id;
 //    }
 //

@@ -24,9 +24,9 @@ public class PapsTest {
 
     @Test
     public void getPapsByCorp() {
-        Float papsByCorp = paps.getPapsByCorp(98547771,
-                PropertiesUtil.getProperty("dc.year"),
-                PropertiesUtil.getProperty("dc.month"));
-        System.out.println(papsByCorp);
+//        Float papsByCorp = paps.getPapsByCorp(98547771,
+//                PropertiesUtil.getProperty("dc.year"),
+//                PropertiesUtil.getProperty("dc.month"));
+//        System.out.println(papsByCorp);
     }
 }

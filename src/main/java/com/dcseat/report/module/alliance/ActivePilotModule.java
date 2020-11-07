@@ -3,6 +3,7 @@ package com.dcseat.report.module.alliance;
 import com.dcseat.report.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Users;
+import com.dcseat.report.util.CollectionUtils;
 import com.dcseat.report.util.MathUtils;
 import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
@@ -11,6 +12,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 
 /**
@@ -88,15 +90,19 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
     @Override
     public void initData() {
         // 获取父类公司集合信息进行遍历
+        List src = users.getActiveUsersNumberByCorp(corps, StringUtils.getSqlDate());
+        // 拷贝参数
+        CollectionUtils.copy(src, corps, "activePilotNumber");
+
         for (CorporationInfo corp : corps) {
             // 读取最近时间公司活跃用户数
-            Integer number = users.getActiveUsersNumberByCorp(corp.getId(), StringUtils.getSqlDate());
-            corp.setActivePilotNumber(number);
+//            Integer number = users.getActiveUsersNumberByCorp(corp.getId(), StringUtils.getSqlDate());
+
             /*
             临时代码 合并老数据
              */
             addNumber(corp);
-
+            Integer number = corp.getActivePilotNumber();
 
             // 计算本模块得分 人口大于10即五分，否则按照人口比例乘以五分  IF(D13>10,5,5/10*D13)
             if (number > MIN_CORP_NUMBER) {

@@ -3,16 +3,21 @@
 <!--命名空间应该是对应接口的包名+接口名 -->
 <mapper namespace="com.dcseat.report.dao.seat.Paps">
     <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
-    <select id="getPapsByCorp"  resultType="java.lang.Float">
+    <select id="getPapsByCorp"  resultType="com.dcseat.report.base.CorporationInfo">
         SELECT
-            IFNULL(SUM( pap.`value` ),0)
+            IFNULL(SUM( pap.`value` ),0) AS papCount,
+            cm.corporation_id AS id
         FROM
             kassie_calendar_paps pap
             JOIN corporation_members cm ON pap.character_id = cm.character_id
         WHERE
-            cm.corporation_id = #{corpId}
+            cm.corporation_id in
+            <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
+                #{item.id}
+            </foreach>
             AND pap.YEAR = #{year}
-            AND pap.`month` = #{month};
+            AND pap.`month` = #{month}
+            GROUP BY cm.corporation_id
     </select>
 
     <select id="getCorpPapsByRank" resultType="java.lang.Float">

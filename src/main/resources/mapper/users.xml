@@ -5,14 +5,19 @@
     <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
     <select id="getActiveUsersNumberByCorp"  resultType="java.lang.Integer">
         SELECT
-            COUNT(u.`name`)
+            COUNT(u.`name`) AS activePilotNumber,
+            cm.corporation_id AS id
         FROM
             users u
             JOIN character_onlines co ON u.main_character_id = co.character_id
             JOIN corporation_members cm ON co.character_id = cm.character_id
         WHERE
-            cm.corporation_id = #{corpId}
+            cm.corporation_id in
+            <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
+                #{item.id}
+            </foreach>
             AND co.last_login > STR_TO_DATE(#{date}, '%Y-%m-%d')
+            GROUP BY cm.corporation_id
     </select>
 
 </mapper>

@@ -6,6 +6,29 @@ import java.util.*;
 
 public class CollectionUtils {
 
+    public static <T> void copy(List<T> src, List<T> target, String... propertyName) {
+        if (src == null || target == null || propertyName.length == 0) return;
+        // 目标集合展开
+        for (T t : target) {
+            // 源数据集合展开
+            for (T s_t : src) {
+                // 批量配置参数
+                for (int i = 0; i < propertyName.length; i++) {
+                    String p = propertyName[i];
+                    // 对象匹配
+                    if (t.equals(s_t)) {
+                        try {
+
+                            forceSetFieldValue(s_t, t, p);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 
     /**
      * 对list集合中的元素按照多个属性名称排序,多个属性的排序方式采用统一方式处理。
@@ -146,5 +169,31 @@ public class CollectionUtils {
         }
         object = field.get(obj);
         return object;
+    }
+
+    /**
+     * 通过反射方式设置指定对象的指定属性值（去除private,protected的限制）
+     *
+     * @param src       属性来源的对象
+     * @param target    属性目标的对象
+     * @param fieldName 属性名称
+     * @return
+     * @throws Exception
+     */
+    public static void forceSetFieldValue(Object src, Object target, String fieldName) throws Exception {
+        Field targetField = target.getClass().getDeclaredField(fieldName);
+        Field srcField = src.getClass().getDeclaredField(fieldName);
+        boolean accessible = targetField.isAccessible();
+        if (!accessible) {
+            // 如果是private,protected修饰的属性，需要修改为可以访问的
+            targetField.setAccessible(true);
+            srcField.setAccessible(true);
+            targetField.set(target, srcField.get(src));
+            // 还原private,protected属性的访问性质
+            targetField.setAccessible(accessible);
+            srcField.setAccessible(accessible);
+            return;
+        }
+        targetField.set(target, srcField.get(src));
     }
 }

@@ -112,11 +112,6 @@ public class AllianceTemplate implements Alliance {
         // 处理 corps成员变量
         try {
             corps = this.alliances.getCorpInfosByAllianceName(allianceName);
-//            for (CorporationInfo corp : corps) {
-//                if (corp.getTaxRate() == 1) {
-//                    corps.remove(corp);
-//                }
-//            }
         } catch (Exception e) {
             log.error("获取联盟公司信息失败,异常信息:{}", e.getMessage());
         }
@@ -133,11 +128,5 @@ public class AllianceTemplate implements Alliance {
         cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
         cell.setCellStyle(cellStyle);
         return cell;
-    }
-
-    public void addData() {
-        for (CorporationInfo corp : corps) {
-            corp.getName();
-        }
     }
 }

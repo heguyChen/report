@@ -3,6 +3,7 @@ package com.dcseat.report.module.alliance;
 import com.dcseat.report.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Paps;
+import com.dcseat.report.util.CollectionUtils;
 import com.dcseat.report.util.MathUtils;
 import com.dcseat.report.util.PropertiesUtil;
 import com.dcseat.report.util.SpringContextUtil;
@@ -12,6 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * pap指标综合实现类
@@ -110,14 +113,21 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
                 PropertiesUtil.getProperty("dc.month"),
                 Integer.valueOf(PropertiesUtil.getProperty("dc.rank")));
 
+        List src = paps.getPapsByCorp(corps,
+                PropertiesUtil.getProperty("dc.year"),
+                PropertiesUtil.getProperty("dc.month"));
+        // 拷贝参数
+        CollectionUtils.copy(src, corps, "papCount");
+
         // 获取各公司pap基础数据
         for (CorporationInfo corp : corps) {
             // 军团无人口跳过计算
             if (corp.getActivePilotNumber() == 0) continue;
 
-            Float papCount = paps.getPapsByCorp(corp.getId(),
-                    PropertiesUtil.getProperty("dc.year"),
-                    PropertiesUtil.getProperty("dc.month"));
+//            Float papCount = paps.getPapsByCorp(corp.getId(),
+//                    PropertiesUtil.getProperty("dc.year"),
+//                    PropertiesUtil.getProperty("dc.month"));
+            Float papCount = corp.getPapCount();
            /*
             临时代码 合并老数据
              */

@@ -14,6 +14,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * 税收模块综合实现类
  */
@@ -82,10 +84,13 @@ public class TaxModule extends AllianceTemplate implements Alliance {
 
     @Override
     public void initData() {
-        for (CorporationInfo corp : corps) {
-            Float corpBounty = corporations.getCorpBounty(corp.getId(), StringUtils.getSqlDate());
-            corp.setCorpTax(corpBounty);
-        }
+        List src = corporations.getCorpBounty(corps, StringUtils.getSqlDate());
+//        for (CorporationInfo corp : corps) {
+//            Float corpBounty = corporations.getCorpBounty(corp.getId(), StringUtils.getSqlDate());
+//            corp.setCorpTax(corpBounty);
+//        }
+        // 拷贝参数
+        CollectionUtils.copy(src, corps, "corpTax");
         // 根据税收排名
         CollectionUtils.sort(corps, false, "corpTax");
         for (int i = 0; i < corps.size(); i++) {
