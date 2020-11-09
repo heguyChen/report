@@ -1,37 +1,30 @@
 package com.dcseat.report.module.alliance;
 
-import com.dcseat.report.Alliance;
+import com.dcseat.report.module.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Alliances;
-import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 public class AllianceTemplate implements Alliance {
 
-    private static Logger log = LoggerFactory.getLogger(AllianceTemplate.class);
+    private static final Logger log = LoggerFactory.getLogger(AllianceTemplate.class);
 
-    private Alliances alliances = SpringContextUtil.getBean("alliances");
+    private final Alliances alliances = SpringContextUtil.getBean("alliances");
 
     // 标题
-    private String corpTitle = "公司名称";
-
-    // 列数
-    private Integer col = 1;
+    private final String corpTitle = "公司名称";
 
     // 月报模块
-    private ArrayList<Alliance> module = new ArrayList<>();
+    private final ArrayList<Alliance> module = new ArrayList<>();
 
     //联盟名称
     protected String allianceName;
@@ -39,10 +32,9 @@ public class AllianceTemplate implements Alliance {
     // 公司信息
     protected List<CorporationInfo> corps = new ArrayList<>();
 
-//    private AllianceTemplate() {};
     /**
      * 构造方法 指定联盟名称
-     * @param allianceName
+     * @param allianceName  联盟名称参数
      */
     public AllianceTemplate(String allianceName) {
         this.allianceName = allianceName;
@@ -118,9 +110,9 @@ public class AllianceTemplate implements Alliance {
     }
 
     /**
-     *
-     * @param cell
-     * @return
+     *  设置单元格样式
+     * @param cell      单元格
+     * @return 返回该单元格
      */
     protected Cell setCellStyle(Cell cell) {
         CellStyle cellStyle = cell.getSheet().getWorkbook().createCellStyle();

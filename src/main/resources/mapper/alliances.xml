@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!--命名空间应该是对应接口的包名+接口名 -->
+<!-- 联盟sql语句映射 -->
 <mapper namespace="com.dcseat.report.dao.seat.Alliances">
-    <!--id应该是接口中的方法，结果类型如没有配置别名则应该使用全名称 -->
+    <!--获取军团信息,剔除税率为1的军团 -->
     <select id="getCorpInfosByAllianceName" resultType="com.dcseat.report.base.CorporationInfo" parameterType="java.lang.String">
         SELECT
             am.corporation_id AS id,

@@ -18,5 +18,5 @@ public interface Users {
      * @param date      日期,格式为yyyy-MM-dd
      * @return 公司的活跃主角色数
      */
-    List getActiveUsersNumberByCorp(List<CorporationInfo> list, String date);
+    List<CorporationInfo> getActiveUsersNumberByCorp(List<CorporationInfo> list, String date);
 }

@@ -1,4 +1,4 @@
-package com.dcseat.report;
+package com.dcseat.report.module;
 
 public interface Corporation {
 

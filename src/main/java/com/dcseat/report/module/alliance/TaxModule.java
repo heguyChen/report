@@ -1,12 +1,10 @@
 package com.dcseat.report.module.alliance;
 
-import com.dcseat.report.Alliance;
+import com.dcseat.report.module.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Corporations;
-import com.dcseat.report.dao.seat.Paps;
 import com.dcseat.report.util.CollectionUtils;
 import com.dcseat.report.util.MathUtils;
-import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -21,7 +19,7 @@ import java.util.List;
  */
 public class TaxModule extends AllianceTemplate implements Alliance {
 
-    private static Logger log = LoggerFactory.getLogger(PapStatisticsModule.class);
+    private static final Logger log = LoggerFactory.getLogger(PapStatisticsModule.class);
 
     /**
      * 税收最大得分
@@ -55,16 +53,20 @@ public class TaxModule extends AllianceTemplate implements Alliance {
 
     @Override
     public int printExcelTitle(Sheet sheet, int row, int col) {
-        // 设置一级标题
-        setCellStyle(sheet.getRow(row).createCell(col)).setCellValue(taxModule_title);
-        // 合并一级标题
-        CellRangeAddress region=new CellRangeAddress(row, row, col, col+2);
-        sheet.addMergedRegion(region);
-        // 设置二级标题
-        setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(tax_title);
-        setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(allianceTax_title);
-        setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(taxRank_title);
-        setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(score_title);
+        try {
+            // 设置一级标题
+            setCellStyle(sheet.getRow(row).createCell(col)).setCellValue(taxModule_title);
+            // 合并一级标题
+            CellRangeAddress region = new CellRangeAddress(row, row, col, col + 2);
+            sheet.addMergedRegion(region);
+            // 设置二级标题
+            setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(tax_title);
+            setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(allianceTax_title);
+            setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(taxRank_title);
+            setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(score_title);
+        } catch (Exception e) {
+            log.error("设置单元格title出错,{}", e.getMessage());
+        }
         return col;
     }
 
@@ -84,11 +86,7 @@ public class TaxModule extends AllianceTemplate implements Alliance {
 
     @Override
     public void initData() {
-        List src = corporations.getCorpBounty(corps, StringUtils.getSqlDate());
-//        for (CorporationInfo corp : corps) {
-//            Float corpBounty = corporations.getCorpBounty(corp.getId(), StringUtils.getSqlDate());
-//            corp.setCorpTax(corpBounty);
-//        }
+        List<CorporationInfo> src = corporations.getCorpBounty(corps, StringUtils.getSqlDate());
         // 拷贝参数
         CollectionUtils.copy(src, corps, "corpTax");
         // 根据税收排名
@@ -108,10 +106,12 @@ public class TaxModule extends AllianceTemplate implements Alliance {
             float corpTax = corp.getCorpTax();
             if (corp.getTaxRate() == 0) continue;
             if (corps.indexOf(corp) == 0) {
+                // 排名第一 减税1%
                 Float allianceTax = MathUtils.division(String.valueOf(corpTax * (ALLIANCE_TAX - 0.01)),
                         String.valueOf(corp.getTaxRate()));
                 corp.setAllianceTax(allianceTax);
             } else if (corps.indexOf(corp) == 1) {
+                // 排名第二 减税0.5%
                 Float allianceTax = MathUtils.division(String.valueOf(corpTax * (ALLIANCE_TAX - 0.005)),
                         String.valueOf(corp.getTaxRate()));
                 corp.setAllianceTax(allianceTax);

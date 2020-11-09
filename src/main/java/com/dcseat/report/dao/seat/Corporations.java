@@ -17,7 +17,7 @@ public interface Corporations {
      * @param date      日期,格式为yyyy-MM-dd
      * @return 返回指定日期下公司的赏金税收
      */
-    List getCorpBounty(List<CorporationInfo> list, String date);
+    List<CorporationInfo> getCorpBounty(List<CorporationInfo> list, String date);
 
     /**
      * 获取公司每个账户的收支求和

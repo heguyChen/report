@@ -1,6 +1,6 @@
 package com.dcseat.report.module.alliance;
 
-import com.dcseat.report.Alliance;
+import com.dcseat.report.module.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Users;
 import com.dcseat.report.util.CollectionUtils;
@@ -11,7 +11,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.UnsupportedEncodingException;
+
 import java.util.List;
 
 
@@ -24,20 +24,15 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
 
     private static final float MAX_SCORE = 5;
 
-    // 列数
-    protected  static final Integer col = 2;
+    private static final Logger log = LoggerFactory.getLogger(ActivePilotModule.class);
 
-    private static Logger log = LoggerFactory.getLogger(ActivePilotModule.class);
+    private final Users users = SpringContextUtil.getBean("users");
 
-    private Users users = SpringContextUtil.getBean("users");
-
-    private String ActivePilot_title = "活跃人头达标(5分)";
+    private final String ActivePilot_title = "活跃人头达标(5分)";
 
     private String activePilotNumber_title = "活跃人头";
 
     private String score_title = "分数";
-
-
 
     /**
      * 构造方法 指定联盟名称
@@ -90,20 +85,13 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
     @Override
     public void initData() {
         // 获取父类公司集合信息进行遍历
-        List src = users.getActiveUsersNumberByCorp(corps, StringUtils.getSqlDate());
+        List<CorporationInfo> src = users.getActiveUsersNumberByCorp(corps, StringUtils.getSqlDate());
         // 拷贝参数
         CollectionUtils.copy(src, corps, "activePilotNumber");
-
         for (CorporationInfo corp : corps) {
             // 读取最近时间公司活跃用户数
-//            Integer number = users.getActiveUsersNumberByCorp(corp.getId(), StringUtils.getSqlDate());
-
-            /*
-            临时代码 合并老数据
-             */
-            addNumber(corp);
-            Integer number = corp.getActivePilotNumber();
-
+//            Integer number = users.getActiveUsersNumberByCorp(corp.getId(), StringUtils.getSqlDate())
+            int number = corp.getActivePilotNumber();
             // 计算本模块得分 人口大于10即五分，否则按照人口比例乘以五分  IF(D13>10,5,5/10*D13)
             if (number > MIN_CORP_NUMBER) {
                 corp.setActivePilotNumberScore(MAX_SCORE);
@@ -115,41 +103,6 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
                     log.error("{}模块,公司{}人数错误.", ActivePilot_title, corp.getName());
                 }
             }
-        }
-    }
-
-    static void addNumber(CorporationInfo corp) {
-        switch (corp.getName()) {
-            case "Vision CN":
-                corp.setActivePilotNumber(124);
-                break;
-            case "B.O.P Supplication For Glorious":
-                corp.setActivePilotNumber(67);
-                break;
-            case "Faceless.":
-                corp.setActivePilotNumber(57);
-                break;
-            case "Perseus War Alliance":
-                corp.setActivePilotNumber(29);
-                break;
-            case "Lang Jiang Hu Elite":
-                corp.setActivePilotNumber(18);
-                break;
-            case "Shadow of Dragon":
-                corp.setActivePilotNumber(12);
-                break;
-            case "Dark Portal":
-            case "Southern Economic Cooperation Organization":
-                corp.setActivePilotNumber(4);
-                break;
-            case "Supremacy of Strength's Classroom":
-            case "To Another Galaxy":
-                corp.setActivePilotNumber(3);
-                break;
-            case "Gaizack Process Development Corp":
-            case "Steel Feather Special Air Corps":
-                corp.setActivePilotNumber(1);
-                break;
         }
     }
 }

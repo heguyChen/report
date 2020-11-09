@@ -1,9 +1,6 @@
-package com.dcseat.report;
+package com.dcseat.report.module;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * 联盟报表接口

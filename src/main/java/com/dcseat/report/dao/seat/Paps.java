@@ -18,7 +18,7 @@ public interface Paps {
      * @param month     月份
      * @return 该军团当月pap总量
      */
-    List getPapsByCorp(List<CorporationInfo> list, String year, String month);
+    List<CorporationInfo> getPapsByCorp(List<CorporationInfo> list, String year, String month);
 
     /**
      * 获取成员级别的pap数据(该日期当月)
@@ -29,7 +29,7 @@ public interface Paps {
     Float getPapsByChar(Integer charId, String date);
 
     /**
-     *
+     * 获取公司pap的基准(指定pap排名)
      * @param allianceName  联盟名称
      * @param year          年份
      * @param month         月份
