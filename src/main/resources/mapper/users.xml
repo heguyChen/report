@@ -2,7 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 用户sql语句映射 -->
 <mapper namespace="com.dcseat.report.dao.seat.Users">
-    <!--  -->
+
+    <select id="getUsers" resultType="com.dcseat.report.base.CharacterInfo">
+        SELECT
+            cmt.character_id AS id,
+            chi.NAME AS characterName,
+            u.id AS groupId,
+            rt.user_id AS parentGroupId,
+            ci.NAME AS corporationName,
+            IF( chi.NAME IS NULL, FALSE, TRUE ) AS isSeat
+        FROM
+            corporation_member_trackings cmt
+            JOIN corporation_infos ci ON cmt.corporation_id = ci.corporation_id
+            LEFT JOIN refresh_tokens rt ON rt.character_id = cmt.character_id
+            LEFT JOIN users u ON u.main_character_id = cmt.character_id
+            LEFT JOIN character_infos chi ON chi.character_id = cmt.character_id
+        WHERE
+            cmt.corporation_id IN
+            <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
+                #{item.id}
+            </foreach>
+            AND cmt.logon_date > STR_TO_DATE(#{date},	'%Y-%m-%d' 	)
+    </select>
+
     <select id="getActiveUsersNumberByCorp"  resultType="com.dcseat.report.base.CorporationInfo">
         SELECT
             COUNT(u.`name`) AS activePilotNumber,
@@ -19,5 +41,24 @@
             AND co.last_login > STR_TO_DATE(#{date}, '%Y-%m-%d')
             GROUP BY cm.corporation_id
     </select>
+
+    <select id="getActiveUnknownNumberByCorp" resultType="com.dcseat.report.base.CorporationInfo">
+        SELECT
+            count( cmt.character_id ) AS unknownActivePilotNumber,
+            cmt.corporation_id AS id
+        FROM
+            corporation_member_trackings cmt
+        WHERE
+            cmt.corporation_id IN
+            <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
+                #{item.id}
+            </foreach>
+            AND cmt.character_id NOT IN ( SELECT rt.character_id FROM users u JOIN refresh_tokens rt ON u.id = rt.user_id )
+            AND cmt.logon_date > STR_TO_DATE( #{date}, '%Y-%m-%d' )
+        GROUP BY
+            cmt.corporation_id
+    </select>
+
+
 
 </mapper>

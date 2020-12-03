@@ -1,5 +1,7 @@
 package com.dcseat.report.module.alliance;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dcseat.report.module.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Users;
@@ -12,7 +14,12 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -31,6 +38,10 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
     private final String ActivePilot_title = "活跃人头达标(5分)";
 
     private String activePilotNumber_title = "活跃人头";
+
+    private String unknownPilotNumber_title = "未注册活跃人头";
+
+    private String sumPilotNumber_title = "总活跃人头";
 
     private String score_title = "分数";
 
@@ -55,10 +66,12 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
 //            log.error("编解码不匹配");
 //        }
         // 合并一级标题
-        CellRangeAddress region=new CellRangeAddress(row, row, col, col+1);
+        CellRangeAddress region=new CellRangeAddress(row, row, col, col+3);
         sheet.addMergedRegion(region);
         // 设置二级标题
         setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(activePilotNumber_title);
+        setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(unknownPilotNumber_title);
+        setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(sumPilotNumber_title);
         setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(score_title);
         return col;
     }
@@ -69,10 +82,10 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
         for (CorporationInfo corp : corps) {
             col = temp_col;
             Row row_ = sheet.getRow(row++);
-            Cell numberCell = row_.createCell(col++);
-            Cell scoreCell = row_.createCell(col++);
-            numberCell.setCellValue(corp.getActivePilotNumber());
-            scoreCell.setCellValue(corp.getActivePilotNumberScore());
+            row_.createCell(col++).setCellValue(corp.getActivePilotNumber());
+            row_.createCell(col++).setCellValue(corp.getUnknownActivePilotNumber());
+            row_.createCell(col++).setCellValue(corp.getSumActivePilotNumber());
+            row_.createCell(col++).setCellValue(corp.getActivePilotNumberScore());
         }
         return col;
     }
@@ -85,13 +98,18 @@ public class ActivePilotModule extends AllianceTemplate implements Alliance {
     @Override
     public void initData() {
         // 获取父类公司集合信息进行遍历
-        List<CorporationInfo> src = users.getActiveUsersNumberByCorp(corps, StringUtils.getSqlDate());
+        // 注册活跃人数
+        List<CorporationInfo> userNum = users.getActiveUsersNumberByCorp(corps, StringUtils.getSqlDate());
+        // 未注册活跃人数
+        List<CorporationInfo> unknownNum = users.getActiveUnknownNumberByCorp(corps, StringUtils.getSqlDate());
         // 拷贝参数
-        CollectionUtils.copy(src, corps, "activePilotNumber");
+        CollectionUtils.copy(userNum, corps, "activePilotNumber");
+        CollectionUtils.copy(unknownNum, corps, "unknownActivePilotNumber");
         for (CorporationInfo corp : corps) {
-            // 读取最近时间公司活跃用户数
-//            Integer number = users.getActiveUsersNumberByCorp(corp.getId(), StringUtils.getSqlDate())
-            int number = corp.getActivePilotNumber();
+            int activePilotNumber = corp.getActivePilotNumber();
+            int unknownActivePilotNumber = corp.getUnknownActivePilotNumber();
+            int number = activePilotNumber + unknownActivePilotNumber;
+            corp.setSumActivePilotNumber(number);
             // 计算本模块得分 人口大于10即五分，否则按照人口比例乘以五分  IF(D13>10,5,5/10*D13)
             if (number > MIN_CORP_NUMBER) {
                 corp.setActivePilotNumberScore(MAX_SCORE);

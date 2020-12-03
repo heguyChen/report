@@ -20,6 +20,27 @@
             GROUP BY cm.corporation_id
     </select>
 
+    <select id="getCharacterPaps" resultType="com.dcseat.report.base.CharacterInfo">
+        SELECT
+            IFNULL(SUM( pap.`value` ),0) AS paps,
+						u.name,
+            cm.corporation_id AS id
+        FROM
+            kassie_calendar_paps pap
+            JOIN corporation_members cm ON pap.character_id = cm.character_id
+						join refresh_tokens rt on pap.character_id = rt.character_id
+						join users u on rt.user_id = u.id
+        WHERE
+            cm.corporation_id in
+            <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
+                #{item.id}
+            </foreach>
+            AND pap.YEAR = #{year}
+            AND pap.`month` = #{month}
+            GROUP BY rt.user_id order by paps desc
+
+    </select>
+
     <!-- 获取指定排名的pap数量 -->
     <select id="getCorpPapsByRank" resultType="java.lang.Float">
         SELECT

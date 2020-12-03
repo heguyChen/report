@@ -23,6 +23,12 @@ public class CorporationInfo {
     // 活跃数
     private int activePilotNumber;
 
+    // 未注册活跃数
+    private int unknownActivePilotNumber;
+
+    // 总活跃数
+    private int sumActivePilotNumber;
+
     // 活跃数得分
     private float activePilotNumberScore;
 

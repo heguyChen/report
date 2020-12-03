@@ -1,9 +1,7 @@
 package com.dcseat.report;
 
-import com.dcseat.report.module.alliance.ActivePilotModule;
-import com.dcseat.report.module.alliance.AllianceTemplate;
-import com.dcseat.report.module.alliance.PapStatisticsModule;
-import com.dcseat.report.module.alliance.TaxModule;
+import com.dcseat.report.module.alliance.*;
+import com.dcseat.report.module.corporation.UnknownSeatModule;
 import com.dcseat.report.util.PropertiesUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -27,7 +25,7 @@ public class ReportApplication implements CommandLineRunner {
     /**
      * SpringBoot 主程序入口
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         SpringApplication.run(ReportApplication.class, args);
     }
 
@@ -48,6 +46,13 @@ public class ReportApplication implements CommandLineRunner {
         allianceTemplate.printExcelTitle(sheet, 0, 0);
         allianceTemplate.printExcelValue(sheet, 0, 0);
 
+//        AllianceTemplate allianceTemplate2 = new AllianceTemplate(name);
+//        allianceTemplate2.initData();
+//        UnknownSeatModule seatModule = new UnknownSeatModule(allianceTemplate2);
+//        allianceTemplate2.add(seatModule);
+//        XSSFSheet sheet2 = workbook.createSheet("未注册seat名单");
+////        seatModule.printExcelTitle(sheet2, 0, 0);
+//        seatModule.printExcelValue(sheet2, 0, 0);
         FileOutputStream  ops = null;
         try {
             ops = new FileOutputStream("../联盟月报.xlsx");

@@ -1,9 +1,10 @@
-package com.dcseat.report.module.alliance;
+package com.dcseat.report.module.corporation;
 
 import com.dcseat.report.base.CharacterInfo;
-import com.dcseat.report.module.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Alliances;
+import com.dcseat.report.dao.seat.Users;
+import com.dcseat.report.module.Alliance;
 import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,14 +17,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-public class AllianceTemplate implements Alliance {
 
-    private static final Logger log = LoggerFactory.getLogger(AllianceTemplate.class);
+/**
+ * 公司模板
+ */
+public class CorporationTemplate implements Alliance {
+
+    private static final Logger log = LoggerFactory.getLogger(CorporationTemplate.class);
 
     private final Alliances alliances = SpringContextUtil.getBean("alliances");
 
-    // 标题
-    private final String corpTitle = "公司名称";
+    private final Users users = SpringContextUtil.getBean("users");
 
     // 月报模块
     private final ArrayList<Alliance> module = new ArrayList<>();
@@ -34,15 +38,14 @@ public class AllianceTemplate implements Alliance {
     // 公司信息
     protected List<CorporationInfo> corps = new ArrayList<>();
 
-    /**
-     * 构造方法 指定联盟名称
-     * @param allianceName  联盟名称参数
-     */
-    public AllianceTemplate(String allianceName) {
+    // 人员信息
+    protected List<CharacterInfo> chars = new ArrayList<>();
+
+    public CorporationTemplate(String allianceName) {
         this.allianceName = allianceName;
     }
 
-    public AllianceTemplate() {
+    public CorporationTemplate() {
 
     }
 
@@ -59,40 +62,17 @@ public class AllianceTemplate implements Alliance {
         // 完成大标题输入 在循环结束后 把大标题合并居中
         Row row0 = sheet.createRow(row++);
         Cell topTitle = row0.createCell(col);
-        topTitle.setCellValue(allianceName+" "+ StringUtils.getTitleDate()+" 月报");
-        // 设置一级标题+合并
-        sheet.createRow(row).createCell(col).setCellValue(corpTitle);
-        CellRangeAddress region=new CellRangeAddress(row, row+1, col, col++);
-        sheet.addMergedRegion(region);
+        topTitle.setCellValue(allianceName+" "+ StringUtils.getTitleDate()+" 成员细则");
 
         sheet.createRow(row+1);
         for (Alliance m : module) {
             col = m.printExcelTitle(sheet, row, col);
         }
-        setCellStyle(sheet.getRow(row).createCell(col)).setCellValue("总分");
-        CellRangeAddress region2 = new CellRangeAddress(row, row+1, col, col++);
-        sheet.addMergedRegion(region2);
         return col;
-
     }
 
     @Override
     public int printExcelValue(Sheet sheet, int row, int col) {
-        row+=3;// topTitle、title1、title2
-        for (int i = 0; i < corps.size(); i++) {
-            CorporationInfo corp = corps.get(i);
-            Row row_ = sheet.createRow(i + row);
-            Cell corpCell = row_.createCell(col);
-            corpCell.setCellValue(corp.getName());
-        }
-        col++;
-        for (Alliance m : module) {
-            col = m.printExcelValue(sheet, row, col);
-        }
-        for (CorporationInfo corp :corps) {
-            Row row_ = sheet.getRow(row++);
-            row_.createCell(col).setCellValue(corp.getScore());
-        }
         return 0;
     }
 
@@ -108,6 +88,12 @@ public class AllianceTemplate implements Alliance {
             corps = this.alliances.getCorpInfosByAllianceName(allianceName);
         } catch (Exception e) {
             log.error("获取联盟公司信息失败,异常信息:{}", e.getMessage());
+        }
+        // 处理 chars成员变量
+        try {
+            chars = this.users.getUsers(corps, StringUtils.getSqlDate());
+        } catch (Exception e) {
+            log.error("获取公司成员信息失败,异常信息:{}", e.getMessage());
         }
     }
 

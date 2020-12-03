@@ -121,10 +121,10 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
         // 获取各公司pap基础数据
         for (CorporationInfo corp : corps) {
             // 军团无人口跳过计算
-            if (corp.getActivePilotNumber() == 0) continue;
+            if (corp.getSumActivePilotNumber() == 0) continue;
             Float papCount = corp.getPapCount();
             // 计算人均pap
-            float perPilotPap = MathUtils.division(String.valueOf(corp.getPapCount()), String.valueOf(corp.getActivePilotNumber()));
+            float perPilotPap = MathUtils.division(String.valueOf(corp.getPapCount()), String.valueOf(corp.getSumActivePilotNumber()));
             corp.setPerPilotPap(perPilotPap);
             // 计算分数 =IF(G14>3,55,45*G14/3)
             if (perPilotPap > MIN_PER_PAP) {
@@ -134,7 +134,7 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
                 corp.setPerPilotPapScore(perPilotPapScore);
             }
             // 计算人均pap奖励分数 =IF(D13>=10,MIN(IF(G13>3,7.5*(G13-3)/3,0),7.5),0)
-            if (corp.getActivePilotNumber() <10) {
+            if (corp.getSumActivePilotNumber() <10) {
                 corp.setPerPilotPapRewardScore(0F);
             } else if (perPilotPap <= MIN_PER_PAP) {
                 corp.setPerPilotPapRewardScore(0F);

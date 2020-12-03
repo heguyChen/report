@@ -22,11 +22,12 @@ public interface Paps {
 
     /**
      * 获取成员级别的pap数据(该日期当月)
-     * @param charId    公司id
-     * @param date      日期,格式为yyyy-MM-dd
-     * @return 该成员当月pap总量
+     * @param list    公司id
+     * @param year      年份
+     * @param month     月份
+     * @return 该成员所有角色当月pap总量
      */
-    Float getPapsByChar(Integer charId, String date);
+    Float getCharacterPaps(List<CorporationInfo> list, String year, String month);
 
     /**
      * 获取公司pap的基准(指定pap排名)

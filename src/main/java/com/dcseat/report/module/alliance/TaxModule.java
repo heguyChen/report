@@ -5,6 +5,7 @@ import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Corporations;
 import com.dcseat.report.util.CollectionUtils;
 import com.dcseat.report.util.MathUtils;
+import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -57,7 +58,7 @@ public class TaxModule extends AllianceTemplate implements Alliance {
             // 设置一级标题
             setCellStyle(sheet.getRow(row).createCell(col)).setCellValue(taxModule_title);
             // 合并一级标题
-            CellRangeAddress region = new CellRangeAddress(row, row, col, col + 2);
+            CellRangeAddress region = new CellRangeAddress(row, row, col, col + 3);
             sheet.addMergedRegion(region);
             // 设置二级标题
             setCellStyle(sheet.getRow(row + 1).createCell(col++)).setCellValue(tax_title);
