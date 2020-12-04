@@ -22,7 +22,7 @@
             <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
                 #{item.id}
             </foreach>
-            AND cmt.logon_date > STR_TO_DATE(#{date},	'%Y-%m-%d' 	)
+            AND cmt.logon_date > STR_TO_DATE(#{date},	'%Y-%m-%d' 	) order by id
     </select>
 
     <select id="getActiveUsersNumberByCorp"  resultType="com.dcseat.report.base.CorporationInfo">

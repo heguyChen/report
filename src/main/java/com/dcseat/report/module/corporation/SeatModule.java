@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.dcseat.report.base.CharacterInfo;
 import com.dcseat.report.dao.seat.Users;
 import com.dcseat.report.module.Alliance;
-import com.dcseat.report.module.alliance.AllianceTemplate;
 import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,8 +18,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-public class UnknownSeatModule extends CorporationTemplate implements Alliance {
-    private static final Logger log = LoggerFactory.getLogger(UnknownSeatModule.class);
+public class SeatModule extends CorporationTemplate implements Alliance {
+    private static final Logger log = LoggerFactory.getLogger(SeatModule.class);
 
     private final Users users = SpringContextUtil.getBean("users");
 
@@ -33,7 +32,7 @@ public class UnknownSeatModule extends CorporationTemplate implements Alliance {
      *
      * @param corporation 父类对象
      */
-    public UnknownSeatModule(CorporationTemplate corporation) {
+    public SeatModule(CorporationTemplate corporation) {
         super();
         this.corps = corporation.corps;
         this.initData();
@@ -58,8 +57,8 @@ public class UnknownSeatModule extends CorporationTemplate implements Alliance {
             col = temp_col;
             Row row_ = sheet.createRow(row++);
 //            if (row_ == null) row_ = sheet.createRow(row);
-            row_.createCell(col++).setCellValue(c.getName());
-            row_.createCell(col++).setCellValue(c.getCorpName());
+            row_.createCell(col++).setCellValue("");
+            row_.createCell(col++).setCellValue("c.getCorpName()");
         }
         return col;
     }
@@ -97,7 +96,7 @@ public class UnknownSeatModule extends CorporationTemplate implements Alliance {
                 System.out.print(",");
                 System.out.println(chars.size());
                 JSONObject parse = (JSONObject) JSON.parse(result);
-                c.setName((String) parse.get("name"));
+//                c.setName((String) parse.get("name"));
             } catch (Exception e) {
 
             }finally {

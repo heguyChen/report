@@ -1,5 +1,6 @@
 package com.dcseat.report.dao.seat;
 
+import com.dcseat.report.base.CharacterInfo;
 import com.dcseat.report.base.CorporationInfo;
 import org.springframework.stereotype.Repository;
 
@@ -22,12 +23,12 @@ public interface Paps {
 
     /**
      * 获取成员级别的pap数据(该日期当月)
-     * @param list    公司id
+     * @param list    成员id
      * @param year      年份
      * @param month     月份
      * @return 该成员所有角色当月pap总量
      */
-    Float getCharacterPaps(List<CorporationInfo> list, String year, String month);
+    List<CharacterInfo> getCharacterPaps(List<CharacterInfo> list, String year, String month);
 
     /**
      * 获取公司pap的基准(指定pap排名)

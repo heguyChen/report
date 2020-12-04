@@ -22,22 +22,19 @@
 
     <select id="getCharacterPaps" resultType="com.dcseat.report.base.CharacterInfo">
         SELECT
-            IFNULL(SUM( pap.`value` ),0) AS paps,
-						u.name,
-            cm.corporation_id AS id
+        cmt.character_id AS id,
+        IFNULL(SUM( IFNULL(pap.`value`,0) ),0) AS paps
         FROM
-            kassie_calendar_paps pap
-            JOIN corporation_members cm ON pap.character_id = cm.character_id
-						join refresh_tokens rt on pap.character_id = rt.character_id
-						join users u on rt.user_id = u.id
+            corporation_member_trackings cmt
+            left join kassie_calendar_paps pap on cmt.character_id = pap.character_id
         WHERE
-            cm.corporation_id in
+        cmt.character_id in
             <foreach collection="list" item="item" index="index" open="(" close=")" separator="," >
                 #{item.id}
             </foreach>
             AND pap.YEAR = #{year}
             AND pap.`month` = #{month}
-            GROUP BY rt.user_id order by paps desc
+            GROUP BY cmt.character_id order by id
 
     </select>
 

@@ -3,10 +3,7 @@ package com.dcseat.report.module.alliance;
 import com.dcseat.report.module.Alliance;
 import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Paps;
-import com.dcseat.report.util.CollectionUtils;
-import com.dcseat.report.util.MathUtils;
-import com.dcseat.report.util.PropertiesUtil;
-import com.dcseat.report.util.SpringContextUtil;
+import com.dcseat.report.util.*;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -109,13 +106,13 @@ public class PapStatisticsModule extends AllianceTemplate implements Alliance {
     public void initData() {
         // 获取评判总量pap的基准
         Float basePap = paps.getCorpPapsByRank(PropertiesUtil.getProperty("dc.name"),
-                PropertiesUtil.getProperty("dc.year"),
-                PropertiesUtil.getProperty("dc.month"),
+                StringUtils.getThisYear(),
+                StringUtils.getThisMonth(),
                 Integer.valueOf(PropertiesUtil.getProperty("dc.rank")));
         // 获取pap数据
         List<CorporationInfo> src = paps.getPapsByCorp(corps,
-                PropertiesUtil.getProperty("dc.year"),
-                PropertiesUtil.getProperty("dc.month"));
+                StringUtils.getThisYear(),
+                StringUtils.getThisMonth());
         // 拷贝参数
         CollectionUtils.copy(src, corps, "papCount");
         // 获取各公司pap基础数据

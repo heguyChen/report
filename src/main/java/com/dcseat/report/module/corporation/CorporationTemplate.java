@@ -25,8 +25,10 @@ public class CorporationTemplate implements Alliance {
 
     private static final Logger log = LoggerFactory.getLogger(CorporationTemplate.class);
 
+    // 联盟接口
     private final Alliances alliances = SpringContextUtil.getBean("alliances");
 
+    // 用户接口
     private final Users users = SpringContextUtil.getBean("users");
 
     // 月报模块
@@ -63,8 +65,8 @@ public class CorporationTemplate implements Alliance {
         Row row0 = sheet.createRow(row++);
         Cell topTitle = row0.createCell(col);
         topTitle.setCellValue(allianceName+" "+ StringUtils.getTitleDate()+" 成员细则");
-
-        sheet.createRow(row+1);
+        // 首列标题
+        sheet.createRow(row++).createCell(col).setCellValue("角色名");
         for (Alliance m : module) {
             col = m.printExcelTitle(sheet, row, col);
         }
@@ -73,7 +75,20 @@ public class CorporationTemplate implements Alliance {
 
     @Override
     public int printExcelValue(Sheet sheet, int row, int col) {
-        return 0;
+        row+=1;
+        // 输入成员名称列
+        for (int i = 0; i < chars.size(); i++) {
+            CharacterInfo characterInfo = chars.get(i);
+            Row row_ = sheet.createRow(i + row);
+            Cell charCell = row_.createCell(col);
+            charCell.setCellValue(characterInfo.getCharacterName());
+        }
+        col++;// 首列被占用
+        // 遍历模块
+        for (Alliance m : module) {
+            col = m.printExcelValue(sheet, row, col);
+        }
+        return col;
     }
 
     @Override

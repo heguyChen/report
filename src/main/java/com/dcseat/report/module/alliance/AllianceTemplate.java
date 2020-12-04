@@ -93,7 +93,7 @@ public class AllianceTemplate implements Alliance {
             Row row_ = sheet.getRow(row++);
             row_.createCell(col).setCellValue(corp.getScore());
         }
-        return 0;
+        return col;
     }
 
     @Override

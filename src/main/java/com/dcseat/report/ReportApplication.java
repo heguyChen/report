@@ -1,7 +1,7 @@
 package com.dcseat.report;
 
+import com.dcseat.report.module.ModuleManager;
 import com.dcseat.report.module.alliance.*;
-import com.dcseat.report.module.corporation.UnknownSeatModule;
 import com.dcseat.report.util.PropertiesUtil;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -32,27 +32,12 @@ public class ReportApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 接入自定义的main接口
-        String name = PropertiesUtil.getProperty("dc.name");
-        AllianceTemplate allianceTemplate = new AllianceTemplate(name);
-        allianceTemplate.initData();
-
-        allianceTemplate.add(new ActivePilotModule(allianceTemplate));
-        allianceTemplate.add(new PapStatisticsModule(allianceTemplate));
-        allianceTemplate.add(new TaxModule(allianceTemplate));
-        // ...继续添加模块
-
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(name);
-        allianceTemplate.printExcelTitle(sheet, 0, 0);
-        allianceTemplate.printExcelValue(sheet, 0, 0);
+//        XSSFSheet sheet1 = workbook.createSheet("联盟月报");
+//        ModuleManager.sheet1(sheet1);
+        XSSFSheet sheet2 = workbook.createSheet("成员月报");
+        ModuleManager.sheet2(sheet2);
 
-//        AllianceTemplate allianceTemplate2 = new AllianceTemplate(name);
-//        allianceTemplate2.initData();
-//        UnknownSeatModule seatModule = new UnknownSeatModule(allianceTemplate2);
-//        allianceTemplate2.add(seatModule);
-//        XSSFSheet sheet2 = workbook.createSheet("未注册seat名单");
-////        seatModule.printExcelTitle(sheet2, 0, 0);
-//        seatModule.printExcelValue(sheet2, 0, 0);
         FileOutputStream  ops = null;
         try {
             ops = new FileOutputStream("../联盟月报.xlsx");
@@ -66,6 +51,14 @@ public class ReportApplication implements CommandLineRunner {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sheet1() {
+
+    }
+
+    private void sheet2() {
+
     }
 
 }

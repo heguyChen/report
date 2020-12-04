@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Objects;
+
 /**
  * 角色信息实体类
  */
@@ -30,4 +32,17 @@ public class CharacterInfo implements Serializable {
 
     // 是否在seat注册
     private Boolean isSeat;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CharacterInfo that = (CharacterInfo) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
