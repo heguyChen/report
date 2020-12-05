@@ -5,6 +5,7 @@ import com.dcseat.report.base.CorporationInfo;
 import com.dcseat.report.dao.seat.Alliances;
 import com.dcseat.report.dao.seat.Users;
 import com.dcseat.report.module.Alliance;
+import com.dcseat.report.util.ESI;
 import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -65,8 +66,15 @@ public class CorporationTemplate implements Alliance {
         Row row0 = sheet.createRow(row++);
         Cell topTitle = row0.createCell(col);
         topTitle.setCellValue(allianceName+" "+ StringUtils.getTitleDate()+" 成员细则");
-        // 首列标题
-        sheet.createRow(row++).createCell(col).setCellValue("角色名");
+        // 标题
+        Row row1 = sheet.createRow(row);
+
+        row1.createCell(col++).setCellValue("角色id");
+        row1.createCell(col++).setCellValue("角色名");
+        row1.createCell(col++).setCellValue("角色组");
+        row1.createCell(col++).setCellValue("父角色组");
+        row1.createCell(col++).setCellValue("公司名称");
+        row1.createCell(col++).setCellValue("是否在seat注册");
         for (Alliance m : module) {
             col = m.printExcelTitle(sheet, row, col);
         }
@@ -75,15 +83,38 @@ public class CorporationTemplate implements Alliance {
 
     @Override
     public int printExcelValue(Sheet sheet, int row, int col) {
-        row+=1;
+        row+=2;
+        int tempCol = col;
         // 输入成员名称列
         for (int i = 0; i < chars.size(); i++) {
+            col = tempCol;
             CharacterInfo characterInfo = chars.get(i);
             Row row_ = sheet.createRow(i + row);
-            Cell charCell = row_.createCell(col);
-            charCell.setCellValue(characterInfo.getCharacterName());
+            row_.createCell(col++).setCellValue(characterInfo.getId());
+            if (characterInfo.getCharacterName() == null) {
+                row_.createCell(col++).setCellValue("");
+            } else {
+                row_.createCell(col++).setCellValue(characterInfo.getCharacterName());
+            }
+            if (characterInfo.getGroupId() == null) {
+                row_.createCell(col++).setCellValue("");
+            } else {
+                row_.createCell(col++).setCellValue(characterInfo.getGroupId());
+            }
+
+            if (characterInfo.getParentGroupId() == null) {
+                row_.createCell(col++).setCellValue("");
+            } else {
+                row_.createCell(col++).setCellValue(characterInfo.getParentGroupId());
+            }
+            row_.createCell(col++).setCellValue(characterInfo.getCorporationName());
+            if (characterInfo.getIsSeat()) {
+                row_.createCell(col++).setCellValue("是");
+            } else {
+                row_.createCell(col++).setCellValue("否");
+            }
         }
-        col++;// 首列被占用
+        col++;// 之前列被占用
         // 遍历模块
         for (Alliance m : module) {
             col = m.printExcelValue(sheet, row, col);
@@ -109,6 +140,19 @@ public class CorporationTemplate implements Alliance {
             chars = this.users.getUsers(corps, StringUtils.getSqlDate());
         } catch (Exception e) {
             log.error("获取公司成员信息失败,异常信息:{}", e.getMessage());
+        }
+        // 这里可以接一个工具方法，把人名补全
+        for (int i = 0; i < chars.size(); i++) {
+            CharacterInfo characterInfo = chars.get(i);
+            if (characterInfo.getCharacterName() == null) {
+                System.out.print(i+1);
+                System.out.print("/");
+                System.out.println(chars.size());
+                String characterName = ESI.getCharacterName(characterInfo.getId());
+                characterInfo.setCharacterName(characterName);
+            }
+
+
         }
     }
 

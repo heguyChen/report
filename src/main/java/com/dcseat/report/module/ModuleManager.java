@@ -35,7 +35,6 @@ public class ModuleManager {
         corporationTemplate.initData();
 
         corporationTemplate.add(new PapModule(corporationTemplate));
-        corporationTemplate.add(new SeatModule(corporationTemplate));
         // ...继续添加模块
 
 

@@ -6,6 +6,7 @@ import com.dcseat.report.module.Alliance;
 import com.dcseat.report.util.CollectionUtils;
 import com.dcseat.report.util.SpringContextUtil;
 import com.dcseat.report.util.StringUtils;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,22 @@ public class PapModule extends CorporationTemplate implements Alliance {
 
     @Override
     public int printExcelTitle(Sheet sheet, int row, int col) {
-        return super.printExcelTitle(sheet, row, col);
+        Row row1 = sheet.getRow(row);
+        row1.createCell(col++).setCellValue("pap数");
+        return col;
     }
 
     @Override
     public int printExcelValue(Sheet sheet, int row, int col) {
-        return super.printExcelValue(sheet, row, col);
+        for (int i = 0; i < chars.size(); i++) {
+            CharacterInfo characterInfo = chars.get(i);
+            if (characterInfo.getPaps() == null) {
+                sheet.getRow(row+i).createCell(col).setCellValue(0);
+            } else {
+                sheet.getRow(row+i).createCell(col).setCellValue(characterInfo.getPaps());
+            }
+        }
+        return col;
     }
 
     @Override
